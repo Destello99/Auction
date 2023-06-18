@@ -31,8 +31,8 @@ public class Customer extends BaseEntity {
 
     //Customer has a wallet
     //Bi- directional relation
-//    @OneToOne(mappedBy = "customer")
-//    private  Wallet wallet;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private  Wallet wallet;
 
     public Customer(String firstName, String lastName, long phoneNumber, String email, short age) {
         this.firstName = firstName;
@@ -64,6 +64,14 @@ public class Customer extends BaseEntity {
 
     public List<Address> getAddresses() {
         return addresses;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     @JsonManagedReference
