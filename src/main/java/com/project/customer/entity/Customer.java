@@ -1,18 +1,25 @@
 package com.project.customer.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.customer.baseEntity.BaseEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Setter
+@Getter
 @NoArgsConstructor
 @Entity
 public class Customer extends BaseEntity {
@@ -42,39 +49,7 @@ public class Customer extends BaseEntity {
         this.age = age;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public long getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public short getAge() {
-        return age;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public Wallet getWallet() {
-        return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
-    }
-
-    @JsonManagedReference
+//    @JsonManagedReference
     public void addAddress(Address address){
         addresses.add(address);
         address.setCustomer(this);
@@ -83,5 +58,16 @@ public class Customer extends BaseEntity {
     public void removeAddress(Address address){
         addresses.remove(address);
         address.setCustomer(null);
+    }
+    
+    // WALLET HELPER METHODS
+    public void addWallet(Wallet wallet) {
+    	this.setWallet(wallet);
+    	wallet.setCustomer(this);
+    }
+    
+    public void removeWallet(Wallet wallet) {
+    	this.setWallet(null);
+    	wallet.setCustomer(null);
     }
 }
