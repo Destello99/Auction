@@ -1,15 +1,16 @@
 package com.project.customer.entity;
 
-import com.project.customer.baseEntity.BaseEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.transaction.Transactional;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.project.customer.baseEntity.BaseEntity;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 public class Wallet extends  BaseEntity{
     private double money;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     //Bidirectional relation
     @OneToOne
     @JoinColumn(name = "Customer_id")

@@ -1,16 +1,16 @@
 package com.project.customer.serviceImpl;
 
-import com.project.customer.custome_exception.NoSuchResourceFound;
-import com.project.customer.entity.Address;
-import com.project.customer.entity.Customer;
-import com.project.customer.repositories.AddressRepository;
-import com.project.customer.repositories.CustomerRepository;
-import com.project.customer.service.CustomerService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.project.customer.custome_exception.NoSuchResourceFound;
+import com.project.customer.entity.Customer;
+import com.project.customer.repositories.AddressRepository;
+import com.project.customer.repositories.CustomerRepository;
+import com.project.customer.service.CustomerService;
 
 @Service
 @Transactional
