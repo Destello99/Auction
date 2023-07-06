@@ -1,20 +1,39 @@
-package com.project.customer.entity;
+    package com.project.customer.entity;
 
 import com.project.customer.baseEntity.BaseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Transient;
 
 @Entity
 public class Product  extends BaseEntity {
     String name;
-    double price;
+   double price;
     LocalDate addedDate;
     boolean status;
-    byte[] img;
 
+    @Column(length = 10000)
+    @Lob
 
+    private String img;
+
+    String description;
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @Transient
+    private MultipartFile imageFile;
     public String getName() {
         return name;
     }
@@ -47,11 +66,19 @@ public class Product  extends BaseEntity {
         this.status = status;
     }
 
-    public byte[] getImg() {
+    public String getImg() {
         return img;
     }
 
-    public void setImg(byte[] img) {
+    public void setImg(String img) {
         this.img = img;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 }
