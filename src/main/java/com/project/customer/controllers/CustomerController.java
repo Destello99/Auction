@@ -31,17 +31,22 @@ public class CustomerController {
     @Autowired
     WalletRepository  walletRepository;
 
+    //Getting All customer
     @GetMapping
     public List<Customer> showAllCustomer(){
         //TODO not working
         return  customerService.getAllCustomers();
     }
+    //Getting All customer done
 
+    //getting customer by id
     @GetMapping("/{id}")
     public Customer getCustomerById(@PathVariable Integer id){
         return  customerService.getByCustomerId(id);
     }
+    //getting customer by id done
 
+    //adding customer
     @PostMapping("/add")
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
         Customer customer1 = customerService.addCustomer(customer);
@@ -49,9 +54,9 @@ public class CustomerController {
             add.setCustomer(customer);
             addressService.addAddress(add);
         }
-
         customer.getWallet().setCustomer(customer);
         walletRepository.save(customer.getWallet());
         return  new ResponseEntity<>(HttpStatus.CREATED);
     }
+    //adding customer done
 }

@@ -23,6 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Customer extends BaseEntity {
+    @Column(nullable = false)
     private String firstName;
     private  String lastName;
     @Column(length = 10, name = "phoneNumbers",nullable = false)
@@ -30,14 +31,13 @@ public class Customer extends BaseEntity {
     private String email;
     private short age;
 
-
     //customer can have many address
     @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Address> addresses = new ArrayList<>();
 
     //Customer has a wallet
-    //Bi- directional relation
+    //Bi-directional relation
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private  Wallet wallet;
 
