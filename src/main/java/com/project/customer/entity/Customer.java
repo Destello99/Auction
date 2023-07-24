@@ -1,14 +1,9 @@
 package com.project.customer.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.customer.baseEntity.BaseEntity;
@@ -16,13 +11,16 @@ import com.project.customer.baseEntity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-public class Customer extends BaseEntity {
+public class Customer extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String firstName;
     private  String lastName;
@@ -30,7 +28,7 @@ public class Customer extends BaseEntity {
     private  long phoneNumber;
     private String email;
     private short age;
-
+    private String password;
     //customer can have many address
     @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -41,6 +39,8 @@ public class Customer extends BaseEntity {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private  Wallet wallet;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    Set<Roles> role = new HashSet<>();
     public Customer(String firstName, String lastName, long phoneNumber, String email, short age) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -69,5 +69,35 @@ public class Customer extends BaseEntity {
     public void removeWallet(Wallet wallet) {
     	this.setWallet(null);
     	wallet.setCustomer(null);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.role.stream().map((r) -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
