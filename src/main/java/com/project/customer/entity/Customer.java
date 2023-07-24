@@ -30,7 +30,7 @@ public class Customer extends BaseEntity {
     private  long phoneNumber;
     private String email;
     private short age;
-
+    private String password;
     //customer can have many address
     @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

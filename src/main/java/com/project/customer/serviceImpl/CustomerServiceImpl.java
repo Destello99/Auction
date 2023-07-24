@@ -35,6 +35,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer getByCustomerId(Integer id) {
-        return customerRepository.findById(id).orElseThrow(()-> new NoSuchResourceFound("no customer avilable"));
+        return customerRepository.findById(id).orElseThrow(()-> new NoSuchResourceFound("no customer available"));
     }
 }
