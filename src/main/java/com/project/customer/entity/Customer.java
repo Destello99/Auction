@@ -41,6 +41,9 @@ public class Customer extends BaseEntity {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private  Wallet wallet;
 
+    //Customer has a cart
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private Cart cart;
     public Customer(String firstName, String lastName, long phoneNumber, String email, short age) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -69,5 +72,17 @@ public class Customer extends BaseEntity {
     public void removeWallet(Wallet wallet) {
     	this.setWallet(null);
     	wallet.setCustomer(null);
+    }
+
+    //methods for the cart add
+    public void addCart(Cart cart){
+        this.setCart(cart);
+        cart.setCustomer(this);
+    }
+
+    //Method for the remove the cart
+    public void removeCart(Cart cart){
+        this.setCart(null);
+        cart.setCustomer(null);
     }
 }

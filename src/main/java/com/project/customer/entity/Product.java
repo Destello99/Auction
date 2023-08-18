@@ -1,12 +1,19 @@
 package com.project.customer.entity;
 
 import com.project.customer.baseEntity.BaseEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
+@Setter
+@Getter
 public class Product  extends BaseEntity {
     String name;
     double price;
@@ -14,6 +21,9 @@ public class Product  extends BaseEntity {
     boolean status;
     byte[] img;
 
+//    @ManyToOne
+//    @JoinColumn(name = "category_id",nullable = false)
+//    private Category productCategory;
 
     public String getName() {
         return name;
@@ -54,4 +64,5 @@ public class Product  extends BaseEntity {
     public void setImg(byte[] img) {
         this.img = img;
     }
+
 }
