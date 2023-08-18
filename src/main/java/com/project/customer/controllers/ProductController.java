@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/getimage/{productid}")
+    @GetMapping(value = "/getimage/{productid}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getProductImage(@PathVariable int productid){
         Product product = productService.getProduct(productid);
 
