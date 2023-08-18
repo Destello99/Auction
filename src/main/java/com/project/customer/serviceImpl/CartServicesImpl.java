@@ -70,6 +70,7 @@ public class CartServicesImpl implements CartServices {
         cartItemRepository.save(cartItem);
 
         //setting total price of cart
+        //
         cart.setTotalCartPrice(cart.getTotalCartPrice()+totalPrice);
 
         CartDto cartDto = new CartDto();
