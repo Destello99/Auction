@@ -63,7 +63,7 @@ public class CustomerController {
 
     // Methods for the cart
     @PostMapping("/cart/add_product")
-    public ResponseEntity<?> addProductToCart(@RequestParam int quantity,@RequestParam Integer product_Id,@RequestParam Integer customer_Id){
+    public ResponseEntity<?> addProductToCart(@RequestParam Integer quantity,@RequestParam Integer product_Id,@RequestParam Integer customer_Id){
 
         System.out.println(quantity+" "+product_Id+" "+" "+customer_Id);
         try{
@@ -73,4 +73,6 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), LocalDate.now()));
         }
     }
+
+
 }

@@ -1,5 +1,7 @@
 package com.project.customer.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.project.customer.baseEntity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +19,9 @@ import javax.persistence.OneToOne;
 @AllArgsConstructor
 public class CartItem extends BaseEntity {
 
-    private int quantity;
+    private Integer quantity;
 
-    private double totalPrice;
+    private Double totalPrice;
 
     @ManyToOne
     private Cart cart;

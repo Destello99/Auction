@@ -2,6 +2,7 @@ package com.project.customer.serviceImpl;
 
 import com.project.customer.custome_exception.NoSuchResourceFound;
 import com.project.customer.dto.CartDto;
+import com.project.customer.dto.CartItemDto;
 import com.project.customer.entity.Cart;
 import com.project.customer.entity.CartItem;
 import com.project.customer.entity.Customer;
@@ -16,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -55,8 +58,8 @@ public class CartServicesImpl implements CartServices {
 
         // Operation on cart
         Cart cart = customer.getCart();
-        //Cart cart1 = cartRepository.findByCustomerId(id).orElseThrow(()-> new NoSuchResourceFound("Cart is not allocated for customer"));
-        // setting a cart to perticular cart item
+        // //Cart cart1 = cartRepository.findByCustomerId(id).orElseThrow(()-> new NoSuchResourceFound("Cart is not allocated for customer"));
+        // // setting a cart to perticular cart item
         if(cart==null){
         cart  = new Cart();
             customer.addCart(cart);
@@ -73,10 +76,135 @@ public class CartServicesImpl implements CartServices {
         //
         cart.setTotalCartPrice(cart.getTotalCartPrice()+totalPrice);
 
-        CartDto cartDto = new CartDto();
+        //CartDto cartDto = new CartDto();
         // mapper.map(cart,cartDto); //??? CartDto cartDto = mapper.map(cart, cartDto.class);
-        return mapper.map(cart,CartDto.class);
+
+        System.out.println("Cart item added successfully");
+
+        //after trying so much
+//        Cart cart = customer.getCart();
+//        if(cart == null){
+//            cart = new Cart();
+//        }
+//
+//        cartItem.setCart(cart);
+//        Set<CartItem> items = cart.getItems();
+//        //if product is already available in the items set then only increase the quantity of product //1.07
+//        Iterator<CartItem> iterator = items.iterator();
+//        Set<CartItem> newCartItems = new HashSet<>();
+//        boolean flag = false;
+//        while(iterator.hasNext()){
+//            CartItem i = iterator.next();
+//            if(i.getProduct().getId()==product_id){
+//                i.setQuantity(quantity);
+//                i.setTotalPrice(totalPrice);
+//                flag = true;
+//            }
+//            newCartItems.add(i);
+//        }
+//
+//        if(flag == true){
+//            items.clear();
+//            items.addAll(newCartItems);
+//        }else{
+//            //if product is not available in the items
+//            cartItem.setCart(cart);
+//            items.add(cartItem);
+//        }
+//
+//        Cart savedCart = cartRepository.save(cart);
+        CartDto cartDto = new CartDto();
+//        CartItemDto cartItemDto = new CartItemDto();
+//        return mapper.map(cart,CartDto.class);
+        cartDto.setTotalCartPrice(cart.getTotalCartPrice());
+        Set<CartItemDto> cartItemList = cart.getItems().stream().map(item -> mapper.map(item, CartItemDto.class)).collect(Collectors.toSet());
+        cartDto.setItems(cartItemList);
+//        cartDto.getItems().forEach(item -> System.out.println(item.getProduct().getId()));
+        System.out.println("dto mapped");
+        return cartDto;
     }
+
+//    public Cart addItem(int quantity,Integer product_id,Integer id){
+//
+//        Customer customer = customerRepository.findById(id).orElseThrow();
+//        Product product = productRepository.findById(product_id).orElseThrow(()->new NoSuchResourceFound("No such Product Avialable"));
+//
+//        System.out.println(customer.getId());
+//
+//        if(!product.isStatus()){
+//            throw new NoSuchResourceFound("Product is not available");
+//        }
+//        //creating the cartItem to add it in the cart
+//        CartItem cartItem = new CartItem();
+//        cartItem.setProduct(product);
+//        System.out.println(cartItem.getProduct().getId());
+//        cartItem.setQuantity(quantity);
+//        double totalPrice = (product.getPrice()*quantity);
+//        cartItem.setTotalPrice(totalPrice);
+//
+//        // Operation on cart
+//        Cart cart = customer.getCart();
+//        // //Cart cart1 = cartRepository.findByCustomerId(id).orElseThrow(()-> new NoSuchResourceFound("Cart is not allocated for customer"));
+//        // // setting a cart to perticular cart item
+//        if(cart==null){
+//            cart  = new Cart();
+//            customer.addCart(cart);
+//            cartRepository.save(cart);
+//        }
+//
+//        System.out.println(cart.getId());
+//        cartItem.setCart(cart);
+//
+//        cart.getItems().add(cartItem);
+//        cartItemRepository.save(cartItem);
+//
+//        //setting total price of cart
+//        //
+//        cart.setTotalCartPrice(cart.getTotalCartPrice()+totalPrice);
+//
+//        //CartDto cartDto = new CartDto();
+//        // mapper.map(cart,cartDto); //??? CartDto cartDto = mapper.map(cart, cartDto.class);
+//
+//        System.out.println("Cart item added successfully");
+//
+//        //after trying so much
+////        Cart cart = customer.getCart();
+////        if(cart == null){
+////            cart = new Cart();
+////        }
+////
+////        cartItem.setCart(cart);
+////        Set<CartItem> items = cart.getItems();
+////        //if product is already available in the items set then only increase the quantity of product //1.07
+////        Iterator<CartItem> iterator = items.iterator();
+////        Set<CartItem> newCartItems = new HashSet<>();
+////        boolean flag = false;
+////        while(iterator.hasNext()){
+////            CartItem i = iterator.next();
+////            if(i.getProduct().getId()==product_id){
+////                i.setQuantity(quantity);
+////                i.setTotalPrice(totalPrice);
+////                flag = true;
+////            }
+////            newCartItems.add(i);
+////        }
+////
+////        if(flag == true){
+////            items.clear();
+////            items.addAll(newCartItems);
+////        }else{
+////            //if product is not available in the items
+////            cartItem.setCart(cart);
+////            items.add(cartItem);
+////        }
+////
+////        Cart savedCart = cartRepository.save(cart);
+//        CartDto cartDto = new CartDto();
+//        CartItemDto cartItemDto = new CartItemDto();
+////        return mapper.map(cart,CartDto.class);
+//        return cart;
+//    }
+
 
     //method to get the cart details with items in the cart
     @Override
@@ -90,8 +218,8 @@ public class CartServicesImpl implements CartServices {
         Set<CartItem> items = cart.getItems();
         CartDto cartDto = new CartDto();
 
-        mapper.map(cart,cartDto);
-        return cartDto;
+        //mapper.map(cart,cartDto);
+        return mapper.map(cart,CartDto.class);
     }
 
     @Override
@@ -116,8 +244,8 @@ public class CartServicesImpl implements CartServices {
         cart.removeItems(cartItemToRemove);
 
         CartDto cartDto = new CartDto();
-        mapper.map(cart,cartDto);
-        return null;
+
+        return mapper.map(cart,CartDto.class);
     }
 
     //method to remove item from the cart

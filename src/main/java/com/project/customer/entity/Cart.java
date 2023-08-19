@@ -18,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Cart extends BaseEntity {
 
-    private double totalCartPrice;
+    private Double totalCartPrice;
     @OneToOne
     private Customer customer;
     @OneToMany(mappedBy = "cart" ,cascade = CascadeType.ALL)

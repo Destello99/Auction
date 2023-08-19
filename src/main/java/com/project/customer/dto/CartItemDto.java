@@ -11,8 +11,6 @@ import javax.persistence.OneToOne;
 @Getter
 @Setter
 public class CartItemDto {
-    private int quantity;
-    private double totalPrice;
-    private Cart cart;
-    private Product product;
+    private Integer quantity;
+    private Double totalPrice;
 }
