@@ -12,7 +12,10 @@ public class Product  extends BaseEntity {
     double price;
     LocalDate addedDate;
     boolean status;
-    byte[] img;
+
+
+//TODO adding image pending
+//    byte[] img;
 
 
     public String getName() {
@@ -42,16 +45,15 @@ public class Product  extends BaseEntity {
     public boolean isStatus() {
         return status;
     }
-
     public void setStatus(boolean status) {
         this.status = status;
     }
 
-    public byte[] getImg() {
-        return img;
-    }
-
-    public void setImg(byte[] img) {
-        this.img = img;
-    }
+//    public byte[] getImg() {
+//        return img;
+//    }
+//
+//    public void setImg(byte[] img) {
+//        this.img = img;
+//    }
 }
