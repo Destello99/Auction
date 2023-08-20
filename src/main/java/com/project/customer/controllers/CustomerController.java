@@ -2,7 +2,6 @@ package com.project.customer.controllers;
 
 import com.project.customer.entity.Address;
 import com.project.customer.entity.Customer;
-import com.project.customer.repositories.WalletRepository;
 import com.project.customer.service.AddressService;
 import com.project.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +20,12 @@ public class CustomerController {
     @Autowired
     AddressService addressService;
 
-    @Autowired
-    WalletRepository  walletRepository;
+
 
 
     //Getting All customer
     @GetMapping
     public List<Customer> showAllCustomer(){
-        //TODO not working
         return  customerService.getAllCustomers();
     }
     //Getting All customer done
@@ -44,12 +41,10 @@ public class CustomerController {
     @PostMapping("/add")
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
         Customer customer1 = customerService.addCustomer(customer);
-        for(Address  add : customer.getAddresses()){
-            add.setCustomer(customer);
+        for(Address  add : customer1.getAddresses()){
+            add.setCustomer(customer1);
             addressService.addAddress(add);
         }
-        customer.getWallet().setCustomer(customer);
-        walletRepository.save(customer.getWallet());
         return  new ResponseEntity<>(HttpStatus.CREATED);
     }
     //adding customer done

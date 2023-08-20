@@ -7,7 +7,7 @@ import com.project.customer.repositories.CustomerRepository;
 import com.project.customer.service.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private ModelMapper mapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Customer> getAllCustomers() {
@@ -34,12 +34,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll();
     }
 
+
     @Override
     public Customer addCustomer(Customer customer) {
-        String password = customer.getPassword();
-        String encode = this.passwordEncoder.encode(password);
-        System.out.println(encode+" encoded pass");
-        customer.setPassword(encode);
+//        String password = customer.getPassword();
+//        String encode = this.passwordEncoder.encode(password);
+//        System.out.println(encode+" encoded pass");
+//        customer.setPassword(encode);
         return customerRepository.save(customer);
     }
 
@@ -48,3 +49,4 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id).orElseThrow(()-> new NoSuchResourceFound("no customer available"));
     }
 }
+
