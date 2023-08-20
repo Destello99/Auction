@@ -41,11 +41,11 @@ public class CustomerApplication implements CommandLineRunner {
 		{
 			Roles admin = new Roles();
 			admin.setId(AppConstants.ROLE_ADMIN);
-			admin.setName("ADMIN_USER");
+			admin.setName("ROLE_ADMIN");
 
 			Roles normal_user = new Roles();
 			normal_user.setId(AppConstants.NORMAL_USER);
-			normal_user.setName("NORMAL_USER");
+			normal_user.setName("ROLE_NORMAL");
 
 			List<Roles> roleList = List.of(admin, normal_user);
 			List<Roles> result = this.roleRepository.saveAll(roleList);
