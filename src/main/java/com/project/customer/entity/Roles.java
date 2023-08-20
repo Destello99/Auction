@@ -8,16 +8,19 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Roles  extends BaseEntity {
+public class Roles {
 
+    @Id
+    private int id;
     @Column(name = "Role", nullable = false)
-    //can't put null
    private String name;
     //many users have many roles
+    //can't put null
 }

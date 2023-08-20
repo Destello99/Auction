@@ -30,13 +30,11 @@ public class JwtTokenHelper {
     public void init(){
         key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
-    private String secret = "jwtTokenKey";
-
     public String getUsernameFromToken(String token){
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getExprirationDateFromToken(String token){
+    public Date getExpirationDateFromToken(String token){
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
@@ -45,11 +43,11 @@ public class JwtTokenHelper {
         return claimsResolver.apply(claims);
     }
     private Claims getAllClaimsFromToken(String token){
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();//change secrete to key
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token){
-        final Date expiration = getExprirationDateFromToken(token);
+        final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 

@@ -3,8 +3,10 @@ package com.project.customer.controllers;
 import com.project.customer.config.CustomUserDetailService;
 import com.project.customer.config.JwtTokenHelper;
 import com.project.customer.custome_exception.JwtException;
+import com.project.customer.dto.CustomerDto;
 import com.project.customer.dto.JwtAuthRequest;
 import com.project.customer.dto.JwtAuthResponse;
+import com.project.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
 
@@ -30,6 +32,9 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CustomerService customerService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request) throws Exception ,JwtException{
@@ -51,5 +56,12 @@ public class AuthController {
             throw new JwtException("user name or password is wrong");
         }
 
+    }
+
+    //Register New User
+    @PostMapping("/register")
+    public ResponseEntity<CustomerDto> registerUser(@RequestBody CustomerDto customerDto){
+        CustomerDto registeredUser = this.customerService.registerNewUser(customerDto);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 }
