@@ -59,15 +59,5 @@ public class Customer extends BaseEntity {
         addresses.remove(address);
         address.setCustomer(null);
     }
-    
-    // WALLET HELPER METHODS
-    public void addWallet(Wallet wallet) {
-    	this.setWallet(wallet);
-    	wallet.setCustomer(this);
-    }
-    
-    public void removeWallet(Wallet wallet) {
-    	this.setWallet(null);
-    	wallet.setCustomer(null);
-    }
+
 }
