@@ -13,4 +13,6 @@ public class CustomerDto {
     String lastName;
     long phoneNumber;
     String email;
+    String age;
+
 }

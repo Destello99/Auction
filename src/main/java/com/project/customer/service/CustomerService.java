@@ -10,4 +10,8 @@ public interface CustomerService {
     Customer addCustomer(Customer customer);
 
     Customer getByCustomerId(Integer id);
+    void deleteCustomer(int id);
+    Customer updateCustomer(String firstName, String lastName, long phoneNumber, String email, short age);
 }
+
+

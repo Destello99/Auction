@@ -5,13 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.project.customer.entity.Address;
 import com.project.customer.entity.Customer;
@@ -59,4 +53,29 @@ public class CustomerController {
         return  new ResponseEntity<>(HttpStatus.CREATED);
     }
     //adding customer done
+
+    //TODO delete customer
+    @DeleteMapping("/{id}")
+    public void deleteCustomer(@PathVariable("id") int id) {
+        customerService.deleteCustomer(id);
+    }
+    // deleting customer
+
+    // Editing Customer details
+    // Update Customer information
+    @PutMapping("/customers/{customerId}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") int id,
+
+                                                   @RequestParam("firstName") String firstName,
+                                                   @RequestParam("lastName") String lastName,
+                                                   @RequestParam("phoneNumber") long phoneNumber,
+                                                   @RequestParam("email") String email,
+                                                   @RequestParam("age") short age) {
+        // TODO: Call the updateCustomer method from the service implementation
+        Customer updatedCustomer = customerService.updateCustomer(firstName, lastName, phoneNumber, email, age);
+
+        // TODO: Set response status and return the updated customer
+        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+    }
+    // Editing Customer details
 }
