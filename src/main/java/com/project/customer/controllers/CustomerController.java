@@ -18,7 +18,7 @@ import com.project.customer.service.CustomerService;
 
 @RestController
 @RequestMapping("/customer")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
@@ -50,13 +50,14 @@ public class CustomerController {
     //adding customer
     @PostMapping("/add")
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
+        System.out.println("Inside the add method");
         Customer customer1 = customerService.addCustomer(customer);
         for(Address  add : customer.getAddresses()){
             add.setCustomer(customer);
             addressService.addAddress(add);
         }
-        customer.getWallet().setCustomer(customer);
-        walletRepository.save(customer.getWallet());
+//        customer.getWallet().setCustomer(customer);
+//        walletRepository.save(customer.getWallet());
         return  new ResponseEntity<>(HttpStatus.CREATED);
     }
     //adding customer done

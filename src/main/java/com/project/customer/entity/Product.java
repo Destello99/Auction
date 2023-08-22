@@ -18,8 +18,9 @@ public class Product  extends BaseEntity {
     String name;
     double price;
     LocalDate addedDate;
-    boolean status;
-    byte[] img;
+    boolean status=false;
+    String img;
+    String description;
 
 //    @ManyToOne
 //    @JoinColumn(name = "category_id",nullable = false)
@@ -57,12 +58,5 @@ public class Product  extends BaseEntity {
         this.status = status;
     }
 
-    public byte[] getImg() {
-        return img;
-    }
-
-    public void setImg(byte[] img) {
-        this.img = img;
-    }
 
 }

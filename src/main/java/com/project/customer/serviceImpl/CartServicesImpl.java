@@ -45,16 +45,11 @@ public class CartServicesImpl implements CartServices {
 
         System.out.println(customer.getId());
 
-        if(!product.isStatus()){
+        if(product.isStatus()){
             throw new NoSuchResourceFound("Product is not available");
         }
         //creating the cartItem to add it in the cart
-        CartItem cartItem = new CartItem();
-        cartItem.setProduct(product);
-        System.out.println(cartItem.getProduct().getId());
-        cartItem.setQuantity(quantity);
-        double totalPrice = (product.getPrice()*quantity);
-        cartItem.setTotalPrice(totalPrice);
+
 
         // Operation on cart
         Cart cart = customer.getCart();
@@ -66,10 +61,42 @@ public class CartServicesImpl implements CartServices {
             cartRepository.save(cart);
         }
 
-        System.out.println(cart.getId());
+        System.out.println("before set "+cart.getId());
+        CartItem cartItem = new CartItem();
+        product.setStatus(true);
+        cartItem.setProduct(product);
+        System.out.println(cartItem.getProduct().getId());
+        cartItem.setQuantity(quantity);
+        double totalPrice = (product.getPrice()*quantity);
+        System.out.println(quantity+" customerId"+customer.getId()+" total_price"+totalPrice);
+        cartItem.setTotalPrice(totalPrice);
+        //setting total price of cart
+
+        double sum=0;
+        Iterator <CartItem>itr=cart.getItems().iterator();
+
+        while(itr.hasNext()){
+            CartItem c1 = itr.next();
+            sum = sum+c1.getTotalPrice();
+        }
+        cart.setTotalCartPrice(sum);
         cartItem.setCart(cart);
 
+        System.out.println("cart item"+cartItem.getCart().getId());
+
+        cart.addItems(cartItem);
         cart.getItems().add(cartItem);
+
+
+
+        System.out.println("after set"+cart.getId());
+        System.out.println(""+cartItem.getQuantity());
+        System.out.println(""+cartItem.getTotalPrice());
+        System.out.println(""+cartItem.getId());
+        System.out.println(""+cartItem.getCart().getTotalCartPrice());
+        System.out.println(""+cartItem.getCart().getCustomer());
+        System.out.println(""+cartItem.getQuantity());
+
         cartItemRepository.save(cartItem);
 
         //setting total price of cart
@@ -231,14 +258,21 @@ public class CartServicesImpl implements CartServices {
 
 //        items.stream().filter((p)->p.getProduct().getId()==productId).collect()
         Iterator<CartItem> itemIterator = items.iterator();
-
+        boolean flag = false;
         //find item to remove
         CartItem cartItemToRemove = new CartItem();
         while (itemIterator.hasNext()){
             CartItem cartItem = itemIterator.next();
             if(cartItem.getProduct().getId()==productId){
+                flag = true;
                cartItemToRemove = cartItem;
             }
+        }
+
+        if(flag == true){
+            Product product = cartItemToRemove.getProduct();
+            product.setStatus(false);
+            cart.setTotalCartPrice(cart.getTotalCartPrice()-product.getPrice());
         }
 
         cart.removeItems(cartItemToRemove);

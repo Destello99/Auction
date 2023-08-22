@@ -13,4 +13,5 @@ import javax.persistence.OneToOne;
 public class CartItemDto {
     private Integer quantity;
     private Double totalPrice;
+    private Product product;
 }
