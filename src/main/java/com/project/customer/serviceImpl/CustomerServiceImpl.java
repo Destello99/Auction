@@ -11,13 +11,11 @@ import com.project.customer.repositories.RoleRepository;
 import com.project.customer.service.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -58,10 +56,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer addCustomer(Customer customer) {
-//        String password = customer.getPassword();
-//        String encode = this.passwordEncoder.encode(password);
-//        System.out.println(encode+" encoded pass");
-//        customer.setPassword(encode);
+        String password = customer.getPassword();
+        customer.setPassword(this.passwordEncoder.encode(password));
+        Roles role = this.roleRepository.findById(AppConstants.NORMAL_USER).get();
+        customer.getRoles().add(role);
         return customerRepository.save(customer);
     }
 

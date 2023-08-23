@@ -2,13 +2,13 @@
 
     import com.fasterxml.jackson.annotation.JsonProperty;
     import com.project.customer.baseEntity.BaseEntity;
+    import lombok.AllArgsConstructor;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
     import org.springframework.security.core.GrantedAuthority;
     import org.springframework.security.core.authority.SimpleGrantedAuthority;
     import org.springframework.security.core.userdetails.UserDetails;
-
     import javax.persistence.*;
     import java.util.*;
     import java.util.stream.Collectors;
@@ -18,6 +18,7 @@
     @Getter
     @NoArgsConstructor
     @Entity
+    @AllArgsConstructor
     public class Customer extends BaseEntity implements UserDetails {
         @Column(nullable = false)
         private String firstName;
@@ -31,10 +32,10 @@
         @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         private List<Address> addresses = new ArrayList<>();
-
+        //customer can have multiple roles
         @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
         @JoinTable(name = "user_role", joinColumns =  @JoinColumn(name = "user", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
+                inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
         private Set<Roles> roles = new HashSet<>();
 
         public Customer(String firstName, String lastName, long phoneNumber, String email, short age) {
@@ -55,11 +56,17 @@
             addresses.remove(address);
             address.setCustomer(null);
         }
+
+        public void removeRole(Roles role){
+            roles.remove(role);
+        }
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return this.roles.stream().map((role) -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+            return this.getRoles()
+                    .stream()
+                    .map(role -> new SimpleGrantedAuthority(role.getName()))
+                    .collect(Collectors.toSet());
         }
-
         @Override
         public String getUsername() {
             return this.email;

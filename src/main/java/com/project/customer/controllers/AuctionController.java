@@ -21,6 +21,7 @@ public class AuctionController {
     @Autowired
     private ProductRepository productRepository;
 
+    //http:localhost:8080/products/{productId}/bid
     @PostMapping("/{productId}/bid")
     public ResponseEntity<String> placeBid(@PathVariable Integer productId, @RequestBody BidAmount bidAmount) {
         Optional<Product> optionalProduct = productRepository.findById(productId);

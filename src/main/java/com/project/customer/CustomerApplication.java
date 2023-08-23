@@ -13,9 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.util.List;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @SpringBootApplication
@@ -41,7 +39,6 @@ public class CustomerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args){
-		System.out.println(this.passwordEncoder.encode("bjp"));
 		try
 		{
 			Roles admin = new Roles();
