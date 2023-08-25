@@ -21,9 +21,9 @@ public class Product  extends BaseEntity {
 
 
     //Product : many, child , owning
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id" ,nullable = false ) //FK col name
-    private Category productCategory;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "category_id" ,nullable = false ) //FK col name
+//    private Category productCategory;
 
     public String getName() {
         return name;

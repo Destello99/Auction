@@ -3,10 +3,7 @@ package com.project.customer.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.project.customer.baseEntity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -17,6 +14,7 @@ import javax.persistence.OneToOne;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "cart")
 public class CartItem extends BaseEntity {
 
     private Integer quantity;
