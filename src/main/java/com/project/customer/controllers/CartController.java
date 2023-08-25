@@ -68,4 +68,14 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(),LocalDate.now()));
         }
     }
+
+    @DeleteMapping("/deleteAllItems/{customerId}")
+    public ResponseEntity<?> deleteAllItems(@PathVariable Integer customerId){
+        try{
+            return new ResponseEntity<>(cartServices.deleteAllItems(customerId),HttpStatus.OK);
+        }catch (RuntimeException e){
+            System.out.println("Error in deleteAllItems "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(),LocalDate.now()));
+        }
+    }
 }

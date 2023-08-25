@@ -151,86 +151,6 @@ public class CartServicesImpl implements CartServices {
         return cartDto;
     }
 
-//    public Cart addItem(int quantity,Integer product_id,Integer id){
-//
-//        Customer customer = customerRepository.findById(id).orElseThrow();
-//        Product product = productRepository.findById(product_id).orElseThrow(()->new NoSuchResourceFound("No such Product Avialable"));
-//
-//        System.out.println(customer.getId());
-//
-//        if(!product.isStatus()){
-//            throw new NoSuchResourceFound("Product is not available");
-//        }
-//        //creating the cartItem to add it in the cart
-//        CartItem cartItem = new CartItem();
-//        cartItem.setProduct(product);
-//        System.out.println(cartItem.getProduct().getId());
-//        cartItem.setQuantity(quantity);
-//        double totalPrice = (product.getPrice()*quantity);
-//        cartItem.setTotalPrice(totalPrice);
-//
-//        // Operation on cart
-//        Cart cart = customer.getCart();
-//        // //Cart cart1 = cartRepository.findByCustomerId(id).orElseThrow(()-> new NoSuchResourceFound("Cart is not allocated for customer"));
-//        // // setting a cart to perticular cart item
-//        if(cart==null){
-//            cart  = new Cart();
-//            customer.addCart(cart);
-//            cartRepository.save(cart);
-//        }
-//
-//        System.out.println(cart.getId());
-//        cartItem.setCart(cart);
-//
-//        cart.getItems().add(cartItem);
-//        cartItemRepository.save(cartItem);
-//
-//        //setting total price of cart
-//        //
-//        cart.setTotalCartPrice(cart.getTotalCartPrice()+totalPrice);
-//
-//        //CartDto cartDto = new CartDto();
-//        // mapper.map(cart,cartDto); //??? CartDto cartDto = mapper.map(cart, cartDto.class);
-//
-//        System.out.println("Cart item added successfully");
-//
-//        //after trying so much
-////        Cart cart = customer.getCart();
-////        if(cart == null){
-////            cart = new Cart();
-////        }
-////
-////        cartItem.setCart(cart);
-////        Set<CartItem> items = cart.getItems();
-////        //if product is already available in the items set then only increase the quantity of product //1.07
-////        Iterator<CartItem> iterator = items.iterator();
-////        Set<CartItem> newCartItems = new HashSet<>();
-////        boolean flag = false;
-////        while(iterator.hasNext()){
-////            CartItem i = iterator.next();
-////            if(i.getProduct().getId()==product_id){
-////                i.setQuantity(quantity);
-////                i.setTotalPrice(totalPrice);
-////                flag = true;
-////            }
-////            newCartItems.add(i);
-////        }
-////
-////        if(flag == true){
-////            items.clear();
-////            items.addAll(newCartItems);
-////        }else{
-////            //if product is not available in the items
-////            cartItem.setCart(cart);
-////            items.add(cartItem);
-////        }
-////
-////        Cart savedCart = cartRepository.save(cart);
-//        CartDto cartDto = new CartDto();
-//        CartItemDto cartItemDto = new CartItemDto();
-////        return mapper.map(cart,CartDto.class);
-//        return cart;
-//    }
 
 
     //method to get the cart details with items in the cart
@@ -282,11 +202,49 @@ public class CartServicesImpl implements CartServices {
         return mapper.map(cart,CartDto.class);
     }
 
+    @Override
+    public Cart deleteAllItems(Integer customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()->new NoSuchResourceFound("Cart is not allocated to customer"));
+        Cart cart = customer.getCart();
+        Set<CartItem> cartItem =cart.getItems();
+        System.out.println(cartItem.toString());
+        System.out.println("Inside the deletecart");
+        cartItem.forEach(item->item.getProduct().setStatus(false));
+         cartItem.clear();
+         cart.setItems(cartItem);
+//        cart.setItems(cartItem);
+//        Set<CartItem> cartItemSet = cart.getItems();
+//        Iterator<CartItem> itr = cartItem.iterator();
+//        while(itr.hasNext()){
+//            CartItem cartItem1 = itr.next();
+//            System.out.println(cartItem1.getProduct().getName());
+////            cartItem1.getProduct().setStatus(false);
+//            removeItem(customer.getId(),cartItem1.getProduct().getId());
+//        }
+
+
+//        cartItem.stream().map(item->{item.getProduct().setStatus(false);return item.getProduct();}).collect(Collectors.toSet());
+//        cartItem.stream().map(item->{cart.removeItems(item);return item.get}).collect(Collectors.toSet());
+
+        cartItem.forEach(item->System.out.println(item.getProduct()));
+        System.out.println("After setting product to false");
+        for(CartItem item : cartItem){
+            System.out.println("before removing");
+            cart.setTotalCartPrice(cart.getTotalCartPrice()-item.getProduct().getPrice());
+            cart.removeItems(item);
+            System.out.println("after removing");
+            Set<CartItem> items = cart.getItems();
+            System.out.println(items.toString());
+        }
+        System.out.println("After calling the removeItems Method");
+//        cartItem.clear();
+        System.out.println(cart.getTotalCartPrice());
+        System.out.println(cart.getItems().toString());
+        System.out.println(cart.getId());
+
+        return cart;
+    }
+
     //method to remove item from the cart
-
-
-
-
-
 
 }

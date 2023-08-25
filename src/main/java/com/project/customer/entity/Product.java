@@ -3,6 +3,7 @@ package com.project.customer.entity;
 import com.project.customer.baseEntity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Setter
 @Getter
+@ToString
 public class Product  extends BaseEntity {
     String name;
     double price;
@@ -21,9 +23,9 @@ public class Product  extends BaseEntity {
 
 
     //Product : many, child , owning
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id" ,nullable = false ) //FK col name
-    private Category productCategory;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "category_id" ,nullable = false ) //FK col name
+//    private Category productCategory;
 
     public String getName() {
         return name;
