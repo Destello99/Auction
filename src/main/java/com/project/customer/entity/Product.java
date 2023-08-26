@@ -1,63 +1,36 @@
 package com.project.customer.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.customer.baseEntity.BaseEntity;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Setter
-@Getter
-@ToString
+@Data
 public class Product  extends BaseEntity {
-    String name;
-    double price;
-    LocalDate addedDate;
-    boolean status=false;
-    String img;
-    String description;
 
 
-    //Product : many, child , owning
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "category_id" ,nullable = false ) //FK col name
-//    private Category productCategory;
+    private String name;
+    private double price;
+    private double highestBid;
+    @Column(name = "EndDate")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime bidEndTime;
 
-    public String getName() {
-        return name;
-    }
+    private LocalDate addedDate;
+    boolean status;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public LocalDate getAddedDate() {
-        return addedDate;
-    }
-
-    public void setAddedDate(LocalDate addedDate) {
-        this.addedDate = addedDate;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer highestBidder;
 
 }
