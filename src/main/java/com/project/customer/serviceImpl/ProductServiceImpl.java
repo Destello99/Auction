@@ -10,56 +10,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
 
+    @Autowired
+    private  ProductRepository productRepository;
     @Autowired
     private ModelMapper mapper;
     @Override
-    public List<Product> getAllProduct() {
-        List<Product>list= productRepository.findAll();
-        List <Product>l1=list.stream().filter(p->p.isStatus()==false).collect(Collectors.toList());
-        return l1;
+    public List<ProductDto> getAllProduct() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(p-> mapper.map(p, ProductDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDto getSingleProduct(int id) {
+        Product byId = productRepository.findById(id).orElseThrow(()-> new NoSuchResourceFound("no such product"));
+        return mapper.map(byId, ProductDto.class);
     }
 
     @Override
     public Product addProduct(Product product) {
         return productRepository.save(product);
     }
+
     @Override
-    public String deleteProduct(Integer id) {
-        Product product=productRepository.findById(id).orElseThrow(()->new NoSuchResourceFound("no such element found"));
-        productRepository.delete(product);
-        return "product removed successfully";
+    public void removeProduct(int id) {
+        Product byId = productRepository.findById(id).orElseThrow(()-> new NoSuchResourceFound("no such product"));
+        productRepository.delete(byId);
     }
 
     @Override
-    public Product getProduct(Integer id) {
-        return productRepository.findById(id).orElseThrow(()->new NoSuchResourceFound("no such element found"));
-    }
-
-    @Override
-    public ProductDto update(Integer id, Product product) {
+    public ProductDto update(int id, Product product) {
         Product oldProduct = productRepository.findById(id).orElseThrow(() -> new NoSuchResourceFound("no such product"));
         oldProduct.setName(product.getName());
         oldProduct.setAddedDate(product.getAddedDate());
         oldProduct.setPrice(product.getPrice());
-        oldProduct.setImg(product.getImg());//new added
         oldProduct.setStatus(product.isStatus());
         productRepository.save(oldProduct);
         return mapper.map(oldProduct, ProductDto.class);
     }
 
-    @Override
-    public Product getProductByName(String name) {
 
-        return productRepository.findProductByName(name).orElseThrow(()->new NoSuchResourceFound("no such element found"));
-    }
 }
