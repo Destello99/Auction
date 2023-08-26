@@ -203,46 +203,26 @@ public class CartServicesImpl implements CartServices {
     }
 
     @Override
-    public Cart deleteAllItems(Integer customerId) {
+    public CartDto deleteAllItems(Integer customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(()->new NoSuchResourceFound("Cart is not allocated to customer"));
         Cart cart = customer.getCart();
-        Set<CartItem> cartItem =cart.getItems();
-        System.out.println(cartItem.toString());
+        Set<CartItem> cartItems =cart.getItems();
+        System.out.println(cartItems.toString());
         System.out.println("Inside the deletecart");
-        cartItem.forEach(item->item.getProduct().setStatus(false));
-         cartItem.clear();
-         cart.setItems(cartItem);
-//        cart.setItems(cartItem);
-//        Set<CartItem> cartItemSet = cart.getItems();
-//        Iterator<CartItem> itr = cartItem.iterator();
-//        while(itr.hasNext()){
-//            CartItem cartItem1 = itr.next();
-//            System.out.println(cartItem1.getProduct().getName());
-////            cartItem1.getProduct().setStatus(false);
-//            removeItem(customer.getId(),cartItem1.getProduct().getId());
-//        }
 
-
-//        cartItem.stream().map(item->{item.getProduct().setStatus(false);return item.getProduct();}).collect(Collectors.toSet());
-//        cartItem.stream().map(item->{cart.removeItems(item);return item.get}).collect(Collectors.toSet());
-
-        cartItem.forEach(item->System.out.println(item.getProduct()));
-        System.out.println("After setting product to false");
-        for(CartItem item : cartItem){
-            System.out.println("before removing");
-            cart.setTotalCartPrice(cart.getTotalCartPrice()-item.getProduct().getPrice());
-            cart.removeItems(item);
-            System.out.println("after removing");
-            Set<CartItem> items = cart.getItems();
-            System.out.println(items.toString());
+        if (!cartItems.isEmpty()) {
+            for (CartItem item : cartItems) {
+                item.getProduct().setStatus(false);
+                item.setCart(null);
+                System.out.println(cart.toString());
+            }
+            cartItems.clear();
+            cart.setTotalCartPrice(0.0);
         }
-        System.out.println("After calling the removeItems Method");
-//        cartItem.clear();
-        System.out.println(cart.getTotalCartPrice());
-        System.out.println(cart.getItems().toString());
-        System.out.println(cart.getId());
 
-        return cart;
+        CartDto cartDto = new CartDto();
+
+        return mapper.map(cart,CartDto.class);
     }
 
     //method to remove item from the cart
