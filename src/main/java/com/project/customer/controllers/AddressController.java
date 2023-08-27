@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/address")
-@CrossOrigin
+@CrossOrigin("*")
 public class AddressController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class AddressController {
     }
 
     @PostMapping
-    public  ResponseEntity<?> addAddress(Address address){
+    public  ResponseEntity<?> addAddress( @RequestBody  Address address){
         return new ResponseEntity<>(addressService.addAddress(address), HttpStatus.OK);
     }
 }

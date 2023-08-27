@@ -3,11 +3,18 @@ package com.project.customer.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.project.customer.custome_exception.NoSuchResourceFound;
 import com.project.customer.dto.ApiResponse;
+import com.project.customer.entity.Roles;
+import com.project.customer.repositories.AddressRepository;
+import com.project.customer.repositories.CustomerRepository;
+import com.project.customer.repositories.RoleRepository;
 import com.project.customer.service.CartServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.customer.entity.Address;
@@ -26,16 +33,25 @@ public class CustomerController {
     AddressService addressService;
 
     @Autowired
-    WalletRepository  walletRepository;
+    private CustomerRepository customerRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     // for cart
     @Autowired
     private CartServices cartServices;
 
     //Getting All customer
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
+    //http://localhost:8080/customer
     public List<Customer> showAllCustomer(){
-        //TODO not working
         return  customerService.getAllCustomers();
     }
     //Getting All customer done
@@ -48,16 +64,15 @@ public class CustomerController {
     //getting customer by id done
 
     //adding customer
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
+    //http://localhost:8080/customer/add
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
-        System.out.println("Inside the add method");
         Customer customer1 = customerService.addCustomer(customer);
-        for(Address  add : customer.getAddresses()){
-            add.setCustomer(customer);
+        for(Address  add : customer1.getAddresses()){
+            add.setCustomer(customer1);
             addressService.addAddress(add);
         }
-//        customer.getWallet().setCustomer(customer);
-//        walletRepository.save(customer.getWallet());
         return  new ResponseEntity<>(HttpStatus.CREATED);
     }
     //adding customer done
@@ -75,9 +90,21 @@ public class CustomerController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable("id") int id) {
-        customerService.deleteCustomer(id);
+    //TODO deleting customer (foreign key constraint)
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    //http://localhost:8080/customer/delete/{id}
+    public ResponseEntity<?> deleteCustomerById(@PathVariable Integer id){
+        Customer byId = this.customerRepository.findById(id).orElseThrow(()-> new NoSuchResourceFound("no user with this id"));
+        for(Roles role : byId.getRoles()){
+            System.out.println(role);
+            this.roleRepository.delete(role);
+        }
+        for(Address address : byId.getAddresses()){
+            this.addressRepository.delete(address);
+        }
+        this.customerService.deleteCustomer(id);
+        return new ResponseEntity<>("user deleted", HttpStatus.OK);
     }
 
     @PutMapping("/update/{customerId}")
