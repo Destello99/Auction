@@ -75,5 +75,23 @@ public class CustomerController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteCustomer(@PathVariable("id") int id) {
+        customerService.deleteCustomer(id);
+    }
 
+    @PutMapping("/update/{customerId}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable("customerId") int id,
+
+                                                   @RequestParam("firstName") String firstName,
+                                                   @RequestParam("lastName") String lastName,
+                                                   @RequestParam("phoneNumber") long phoneNumber,
+                                                   @RequestParam("email") String email,
+                                                   @RequestParam("age") short age) {
+
+        Customer updatedCustomer = customerService.updateCustomer(firstName, lastName, phoneNumber, email, age);
+
+
+        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+    }
 }

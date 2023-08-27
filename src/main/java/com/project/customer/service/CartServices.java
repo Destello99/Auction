@@ -14,5 +14,5 @@ public interface CartServices {
     //Method to remove item from the cart
     CartDto removeItem(Integer userId,Integer productId);
 
-    Cart deleteAllItems(Integer customerId);
+    CartDto deleteAllItems(Integer customerId);
 }

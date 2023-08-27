@@ -1,5 +1,6 @@
 package com.project.customer.test;
 
+import com.project.customer.custome_exception.NoSuchResourceFound;
 import com.project.customer.entity.Customer;
 import com.project.customer.repositories.CustomerRepository;
 import org.junit.jupiter.api.Test;
@@ -29,4 +30,16 @@ public class CustomerTest {
         Customer customer = new Customer("Tushar","Satalkar",phoneNo,"tushar@123gmail.com",(short)23);
         assertEquals(customer,customerRepository.save(customer));
     }
+
+    @Test
+    void testGetCustomer(){
+        Customer customer = customerRepository.findById(2).orElseThrow(()->new NoSuchResourceFound("Can't find the customer"));
+
+        assertEquals("tushar",customer.getFirstName());
+    }
+
+//    @Test
+//    void testUpdateCustomer(){
+//        Customer
+//    }
 }
