@@ -1,28 +1,25 @@
 package com.project.customer.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.customer.baseEntity.BaseEntity;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import javax.persistence.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-public class Customer extends BaseEntity {
+@AllArgsConstructor
+public class Customer extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String firstName;
     private  String lastName;
@@ -30,18 +27,17 @@ public class Customer extends BaseEntity {
     private  long phoneNumber;
     private String email;
     private short age;
-
+    private String password;
     //customer can have many address
-    @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Address> addresses = new ArrayList<>();
+    //customer can have multiple roles
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns =  @JoinColumn(name = "user", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
+    private Set<Roles> roles = new HashSet<>();
 
-    //Customer has a wallet
-    //Bi-directional relation
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private  Wallet wallet;
-
-    //Customer has a cart
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private Cart cart;
     public Customer(String firstName, String lastName, long phoneNumber, String email, short age) {
@@ -52,7 +48,7 @@ public class Customer extends BaseEntity {
         this.age = age;
     }
 
-//    @JsonManagedReference
+    //    @JsonManagedReference
     public void addAddress(Address address){
         addresses.add(address);
         address.setCustomer(this);
@@ -62,19 +58,42 @@ public class Customer extends BaseEntity {
         addresses.remove(address);
         address.setCustomer(null);
     }
-    
-    // WALLET HELPER METHODS
-    public void addWallet(Wallet wallet) {
-    	this.setWallet(wallet);
-    	wallet.setCustomer(this);
+
+    public void removeRole(Roles role){
+        roles.remove(role);
     }
-    
-    public void removeWallet(Wallet wallet) {
-    	this.setWallet(null);
-    	wallet.setCustomer(null);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
+    }
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
-    //methods for the cart add
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void addCart(Cart cart){
         this.setCart(cart);
         cart.setCustomer(this);
